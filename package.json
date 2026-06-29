@@ -11,7 +11,7 @@
   "author": "Daily Learning",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^42.4.1",
+    "electron": "^35.7.5",
     "electron-builder": "^26.15.3"
   },
   "dependencies": {
@@ -21,7 +21,7 @@
     "appId": "com.dailylearning.app",
     "productName": "Daily Learning",
     "directories": {
-      "output": "dist"
+      "output": "release"
     },
     "files": [
       "main.js",

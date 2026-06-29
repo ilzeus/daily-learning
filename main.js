@@ -25,7 +25,6 @@ const menuTemplate = [
   }
 ];
 
-// macOS 需要在最前面加应用名菜单
 if (process.platform === 'darwin') {
   menuTemplate.unshift({
     label: app.getName(),
@@ -40,7 +39,7 @@ if (process.platform === 'darwin') {
 const menu = Menu.buildFromTemplate(menuTemplate);
 Menu.setApplicationMenu(menu);
 
-// ---- IPC：提供 userData 路径给渲染进程 ----
+// ---- IPC ----
 ipcMain.on('get-userdata-path', (event) => {
   event.returnValue = app.getPath('userData');
 });
