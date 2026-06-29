@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Learning</title>
+
+  <!-- Google Fonts: Dancing Script (品牌艺术字体) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+  <!-- 全局样式 -->
+  <link rel="stylesheet" href="styles/global.css">
+</head>
+<body>
+
+  <!-- ===== 顶部品牌区 ===== -->
+  <header class="brand">
+    <!-- TODO: 替换为 assets/eagle.png 像素鹰图片 -->
+    <div class="brand__icon">
+      <span class="brand__icon-placeholder">🦅</span>
+    </div>
+    <h1 class="brand__title">Daily Learning</h1>
+  </header>
+
+  <!-- ===== 主内容区 ===== -->
+  <main class="main-content">
+
+    <!-- 学习内容输入区 (F1) -->
+    <textarea
+      class="input-area"
+      placeholder="输入你想学习的内容..."
+      rows="5"
+    ></textarea>
+
+    <!-- 生成笔记按钮 (F2) -->
+    <button id="btn-generate" class="btn btn--generate" type="button">
+      生成笔记
+    </button>
+
+    <!-- 加载动画区（默认隐藏） -->
+    <div id="loading-container" class="loading">
+      <div class="loading__bar">
+        <span class="loading__eagle">🦅</span>
+      </div>
+      <p class="loading__text">正在生成知识点...</p>
+    </div>
+
+    <!-- 错误提示区（默认隐藏） -->
+    <div id="error-container" class="error">
+      <p class="error__icon">⚠️</p>
+      <p id="error-message" class="error__text">生成失败，请检查网络或API配置后重试</p>
+    </div>
+
+    <!-- 结果展示区（F2 — 默认隐藏） -->
+    <section id="result-container" class="result">
+      <div class="result__card">
+        <div id="result-content" class="result__content"></div>
+      </div>
+      <!-- 保存到 Notion 按钮（F3 — Step 5 接入，未生成时 disabled） -->
+      <button id="btn-save" class="btn btn--save" type="button" disabled>
+        保存到 Notion
+      </button>
+    </section>
+  </main>
+
+  <!-- 配置弹窗 (F4) -->
+  <div id="config-overlay" class="config-overlay">
+    <div class="config-modal">
+      <h2 id="config-modal-title" class="config-modal__title">首次配置</h2>
+      <p class="config-modal__desc">
+        请填写 API 配置信息，密钥将加密存储到本地。
+      </p>
+
+      <div class="config-modal__field">
+        <label for="config-deepseek-key">DeepSeek API Key</label>
+        <input
+          id="config-deepseek-key"
+          class="config-modal__input"
+          type="password"
+          placeholder="sk-..."
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="config-modal__field">
+        <label for="config-notion-token">Notion Integration Token</label>
+        <input
+          id="config-notion-token"
+          class="config-modal__input"
+          type="password"
+          placeholder="secret_..."
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="config-modal__field">
+        <label for="config-notion-db">Notion 数据库 ID</label>
+        <input
+          id="config-notion-db"
+          class="config-modal__input"
+          type="text"
+          placeholder="数据库 ID（32 位十六进制）"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="config-modal__actions">
+        <button id="btn-config-cancel" class="btn btn--config-cancel" type="button">
+          取消
+        </button>
+        <button id="btn-config-save" class="btn btn--config-save" type="button">
+          保存
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 提示 Toast（默认隐藏） -->
+  <div id="toast" class="toast">
+    <span id="toast-icon" class="toast__icon"></span>
+    <span id="toast-message" class="toast__text"></span>
+  </div>
+
+  <script src="scripts/renderer.js"></script>
+</body>
+</html>
