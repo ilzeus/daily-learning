@@ -85,7 +85,7 @@
 | 外链 | 不在应用内打开 | ✅ 拦截导航/弹窗，交系统浏览器 |
 | 键盘 | 焦点可见、切档可用左右箭头/Home/End、Esc 关弹窗、F12 开控制台、Ctrl+Q 退出 | ✅ |
 | 对比度 | 文字灰阶过 WCAG AA | ✅ muted 6.8:1 / faint 4.5:1 |
-| 打包 | electron-builder → 便携版 + NSIS | ⚠️ 配置就绪，重构后未重新出包 |
+| 打包 | electron-builder → 便携版 + NSIS | ✅ v1.1.0 已出并发到 Releases（未做代码签名） |
 
 ---
 

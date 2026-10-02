@@ -30,9 +30,18 @@ Daily Learning 把这件事压成一个桌面动作：**一次提问，同时拿
 
 ## 安装方法
 
-准备三样东西：Windows 10/11（x64）、一个 OpenAI 兼容的 API Key、Node.js（只有从源码跑才需要，`electron-builder` 要求 14 以上）。
+准备三样东西：Windows 10/11（x64）、一个 OpenAI 兼容的 API Key、Node.js（只有从源码跑或自己打包才需要，`electron-builder` 要求 14 以上）。
 
-> **目前没有可下载的安装包**：[Releases](https://github.com/jklzues/daily-learning/releases) 页面是空的——安全与体验重构之后还没重新出包。所以要么从源码跑，要么照下面自己打一份。
+**下载安装包（最省事）**
+
+到 [Releases](https://github.com/jklzues/daily-learning/releases/latest) 拿 v1.1.0，两个文件选一个：
+
+| 文件 | 是什么 |
+| --- | --- |
+| `Daily.Learning.1.1.0.exe` | 便携版，双击即用，不写注册表 |
+| `Daily.Learning.Setup.1.1.0.exe` | 安装版，向导里可选安装目录，会在桌面创建快捷方式 |
+
+安装包**没有代码签名**（个人项目，没买证书），首次运行 Windows SmartScreen 可能弹「未知发布者」，点「仍要运行」就行。
 
 **从源码运行**
 
