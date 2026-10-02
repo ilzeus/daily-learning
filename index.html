@@ -3,25 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 渲染进程不需要任何网络与脚本执行能力：脚本只允许本地文件，模型输出里的远程图片/脚本一律拦掉 -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <title>Daily Learning</title>
-
-  <!-- Google Fonts: Dancing Script (品牌艺术字体) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 
   <!-- 全局样式 -->
   <link rel="stylesheet" href="styles/global.css">
 </head>
 <body>
 
-  <!-- ===== 顶部品牌区 ===== -->
-  <header class="brand">
-    <!-- TODO: 替换为 assets/eagle.png 像素鹰图片 -->
-    <div class="brand__icon">
-      <span class="brand__icon-placeholder">🦅</span>
+  <!-- ===== 顶部标题栏 ===== -->
+  <header class="app-header">
+    <div class="app-header__brand">
+      <img class="app-header__mark" src="assets/logo.png" alt="" width="26" height="26">
+      <h1 class="app-header__title">Daily Learning</h1>
     </div>
-    <h1 class="brand__title">Daily Learning</h1>
+
+    <button id="btn-open-config" class="icon-btn" type="button" aria-label="配置">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="21" x2="14" y1="5" y2="5"/>
+        <line x1="10" x2="3" y1="5" y2="5"/>
+        <line x1="21" x2="12" y1="12" y2="12"/>
+        <line x1="8" x2="3" y1="12" y2="12"/>
+        <line x1="21" x2="16" y1="19" y2="19"/>
+        <line x1="12" x2="3" y1="19" y2="19"/>
+        <line x1="14" x2="14" y1="3" y2="7"/>
+        <line x1="8" x2="8" y1="10" y2="14"/>
+        <line x1="16" x2="16" y1="17" y2="21"/>
+      </svg>
+    </button>
   </header>
 
   <!-- ===== 主内容区 ===== -->
@@ -31,37 +43,76 @@
     <textarea
       class="input-area"
       placeholder="输入你想学习的内容..."
-      rows="5"
+      rows="4"
+      spellcheck="false"
     ></textarea>
 
-    <!-- 生成笔记按钮 (F2) -->
-    <button id="btn-generate" class="btn btn--generate" type="button">
-      生成笔记
-    </button>
-
-    <!-- 加载动画区（默认隐藏） -->
-    <div id="loading-container" class="loading">
-      <div class="loading__bar">
-        <span class="loading__eagle">🦅</span>
+    <!-- 生成风格 + 生成笔记按钮 (F2) -->
+    <div class="toolbar">
+      <div id="mode-switch" class="segmented" role="radiogroup" aria-label="生成风格">
+        <button class="segmented__item segmented__item--active" type="button"
+                role="radio" aria-checked="true" tabindex="0" data-mode="learn">学习版</button>
+        <button class="segmented__item" type="button"
+                role="radio" aria-checked="false" tabindex="-1" data-mode="pro">专业版</button>
+        <button class="segmented__item" type="button"
+                role="radio" aria-checked="false" tabindex="-1" data-mode="notes">笔记版</button>
       </div>
-      <p class="loading__text">正在生成知识点...</p>
+
+      <button id="btn-generate" class="btn btn--primary" type="button">
+        <span id="btn-generate-label">生成笔记</span>
+      </button>
+    </div>
+
+    <!-- 加载动画区（默认隐藏；未激活时是 display:none，不需要额外 aria 状态） -->
+    <div id="loading-container" class="loading">
+      <div class="loading__track"><div class="loading__fill"></div></div>
+      <p id="loading-text" class="loading__text">正在生成三个版本...</p>
     </div>
 
     <!-- 错误提示区（默认隐藏） -->
-    <div id="error-container" class="error">
-      <p class="error__icon">⚠️</p>
-      <p id="error-message" class="error__text">生成失败，请检查网络或API配置后重试</p>
+    <div id="error-container" class="error" role="alert">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M12 8v4M12 16h.01"/>
+      </svg>
+      <p id="error-message" class="error__text"></p>
+    </div>
+
+    <!-- 空状态（结果生成前占位，纯 CSS 控制显隐） -->
+    <div class="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/>
+        <path d="M14 3v5h5"/>
+      </svg>
+      <p>还没有笔记</p>
     </div>
 
     <!-- 结果展示区（F2 — 默认隐藏） -->
-    <section id="result-container" class="result">
+    <section id="result-container" class="result" data-mode="learn">
       <div class="result__card">
         <div id="result-content" class="result__content"></div>
       </div>
-      <!-- 保存到 Notion 按钮（F3 — Step 5 接入，未生成时 disabled） -->
-      <button id="btn-save" class="btn btn--save" type="button" disabled>
-        保存到 Notion
-      </button>
+      <div class="result__footer">
+        <!-- 复制这一版：没配 Notion 也能把笔记带走 -->
+        <button id="btn-copy" class="btn btn--secondary" type="button" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="9" y="9" width="11" height="11" rx="2.5"/>
+            <path d="M5.5 15.5V6.5A2 2 0 0 1 7.5 4.5h8"/>
+          </svg>
+          <span id="btn-copy-label">复制 Markdown</span>
+        </button>
+        <!-- 保存到 Notion 按钮（F3 — 未生成时 disabled） -->
+        <button id="btn-save" class="btn btn--secondary" type="button" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 19h14"/>
+          </svg>
+          <span id="btn-save-label">保存到 Notion</span>
+        </button>
+      </div>
     </section>
   </main>
 
@@ -70,13 +121,20 @@
     <div class="config-modal">
       <h2 id="config-modal-title" class="config-modal__title">首次配置</h2>
       <p class="config-modal__desc">
-        请填写 API 配置信息，密钥将加密存储到本地。
+        选服务商后会列出它常用的模型，点「拉取最新」可读服务商当前的模型清单；切换服务商会重置模型和地址。密钥经系统密钥库加密后只存在本机，当前 Windows 账户才能解开；留空表示不改。
       </p>
 
       <div class="config-modal__field">
-        <label for="config-deepseek-key">DeepSeek API Key</label>
+        <label for="config-provider-btn">模型服务商</label>
+        <button id="config-provider-btn" type="button"
+                class="config-modal__input config-modal__select picker-trigger"></button>
+        <select id="config-provider" class="picker-native" tabindex="-1" aria-hidden="true"></select>
+      </div>
+
+      <div class="config-modal__field">
+        <label for="config-api-key">API Key</label>
         <input
-          id="config-deepseek-key"
+          id="config-api-key"
           class="config-modal__input"
           type="password"
           placeholder="sk-..."
@@ -85,7 +143,37 @@
       </div>
 
       <div class="config-modal__field">
-        <label for="config-notion-token">Notion Integration Token</label>
+        <label for="config-model-btn">模型名称</label>
+        <div class="config-modal__row">
+          <button id="config-model-btn" type="button"
+                  class="config-modal__input config-modal__select picker-trigger"></button>
+          <select id="config-model" class="picker-native" tabindex="-1" aria-hidden="true"></select>
+          <button id="btn-refresh-models" class="btn btn--config-cancel config-modal__mini" type="button">
+            拉取最新
+          </button>
+        </div>
+        <input
+          id="config-model-manual"
+          class="config-modal__input config-modal__manual config-modal__field--hidden"
+          type="text"
+          placeholder="手动填写模型名"
+          autocomplete="off"
+        />
+      </div>
+
+      <div id="config-baseurl-field" class="config-modal__field config-modal__field--hidden">
+        <label for="config-base-url">接口地址</label>
+        <input
+          id="config-base-url"
+          class="config-modal__input"
+          type="text"
+          placeholder="https://你的地址/v1"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="config-modal__field">
+        <label for="config-notion-token">Notion Integration Token（可选）</label>
         <input
           id="config-notion-token"
           class="config-modal__input"
@@ -96,14 +184,40 @@
       </div>
 
       <div class="config-modal__field">
-        <label for="config-notion-db">Notion 数据库 ID</label>
+        <label for="config-notion-db">Notion 数据库 ID（可选）</label>
         <input
           id="config-notion-db"
           class="config-modal__input"
           type="text"
-          placeholder="数据库 ID（32 位十六进制）"
+          placeholder="32 位十六进制字符串"
           autocomplete="off"
         />
+      </div>
+
+      <div class="config-modal__field">
+        <!-- 不写 for：label 指到 button 上，点标题就等于点「打开文件夹」 -->
+        <label>本机笔记</label>
+        <div class="config-modal__switch-row">
+          <label for="config-auto-save">生成后自动存到本机</label>
+          <input id="config-auto-save" class="switch" type="checkbox" />
+        </div>
+        <input
+          id="config-notes-dir"
+          class="config-modal__input config-modal__input--path"
+          type="text"
+          placeholder="留空 = 用默认目录"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <div class="config-modal__row config-modal__row--end">
+          <button id="btn-pick-notes-dir" class="btn btn--config-cancel config-modal__mini" type="button">
+            自定义保存位置
+          </button>
+          <button id="btn-open-notes" class="btn btn--config-cancel config-modal__mini" type="button">
+            打开文件夹
+          </button>
+        </div>
+        <p id="notes-hint" class="config-modal__hint">开着开关时每生成一版会往这个文件夹写一个 Markdown 文件。</p>
       </div>
 
       <div class="config-modal__actions">
@@ -117,9 +231,8 @@
     </div>
   </div>
 
-  <!-- 提示 Toast（默认隐藏） -->
-  <div id="toast" class="toast">
-    <span id="toast-icon" class="toast__icon"></span>
+  <!-- 提示 Toast（默认隐藏）；aria-live 让读屏能念出变化，不抢焦点 -->
+  <div id="toast" class="toast" role="status" aria-live="polite">
     <span id="toast-message" class="toast__text"></span>
   </div>
 

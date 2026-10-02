@@ -1,0 +1,13 @@
+# 统一按 LF 入库。这台机器是 Windows，没有这几行的话，换一台 core.autocrlf=true
+# 的机器克隆下来改一笔，diff 里会多出整文件的行尾改动。
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.icns binary
+*.exe binary
+*.dll binary
+*.blockmap binary

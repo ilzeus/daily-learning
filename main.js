@@ -1,62 +1,46 @@
-const { app, BrowserWindow, Menu, ipcMain } = require('electron');
+// Daily Learning — 主进程
+const { app, BrowserWindow, Menu, shell } = require('electron');
 const path = require('path');
+const { registerHandlers } = require('./scripts/handlers.js');
+const { attachWindowGuards } = require('./scripts/window-guards.js');
 
-// ---- 应用菜单 ----
-const menuTemplate = [
-  {
-    label: '设置',
-    submenu: [
-      {
-        label: '配置',
-        accelerator: 'CmdOrCtrl+,',
-        click: (_item, focusedWindow) => {
-          if (focusedWindow) {
-            focusedWindow.webContents.send('open-config');
-          }
-        }
-      },
-      { type: 'separator' },
-      {
-        label: '退出',
-        accelerator: process.platform === 'darwin' ? 'Cmd+Q' : 'Alt+F4',
-        click: () => { app.quit(); }
-      }
-    ]
-  }
-];
+const APP_ICON = path.join(__dirname, 'assets', 'logo.png');
+const PRELOAD = path.join(__dirname, 'preload.js');
 
-if (process.platform === 'darwin') {
-  menuTemplate.unshift({
-    label: app.getName(),
-    submenu: [
-      { role: 'about' },
-      { type: 'separator' },
-      { role: 'quit' }
-    ]
-  });
-}
+// 简洁工具风：不显示系统菜单栏，配置入口在窗口内的标题栏
+Menu.setApplicationMenu(null);
 
-const menu = Menu.buildFromTemplate(menuTemplate);
-Menu.setApplicationMenu(menu);
+// 不设这个，Windows 会把任务栏图标归到 Electron 宿主，窗口图标显示不出来
+app.setAppUserModelId('com.dailylearning.app');
 
-// ---- IPC ----
-ipcMain.on('get-userdata-path', (event) => {
-  event.returnValue = app.getPath('userData');
-});
+registerHandlers();
 
-// ---- 窗口创建 ----
 function createWindow() {
   const win = new BrowserWindow({
     width: 480,
     height: 680,
     minWidth: 400,
     minHeight: 500,
+    icon: APP_ICON,
+    show: false,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
+      // 渲染进程拿不到 Node：所有网络与文件读写都在主进程做完再喂给它
+      preload: PRELOAD,
+      contextIsolation: true,
+      nodeIntegration: false,
+      sandbox: false
     }
   });
 
+  attachWindowGuards(win, {
+    rootDir: __dirname,
+    // openExternal 是 Promise：找不到默认浏览器会 reject，不接住就是一条未处理拒绝
+    openExternal: (url) => {
+      shell.openExternal(url).catch((err) => console.error('[links] 交给系统浏览器失败:', err && err.message));
+    }
+  });
+
+  win.once('ready-to-show', () => win.show());
   win.loadFile('index.html');
 }
 

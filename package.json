@@ -1,14 +1,31 @@
 {
   "name": "daily-learning",
-  "version": "1.0.0",
-  "description": "Windows桌面端学习助手 - AI生成结构化知识点，一键保存到Notion",
+  "version": "1.1.0",
+  "description": "Windows 桌面端 AI 学习笔记助手：一次生成三种讲解风格，可归档到 Notion 或自动存成本机 Markdown",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "build": "electron-builder",
     "build:win": "electron-builder --win"
   },
-  "author": "Daily Learning",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jklzues/daily-learning.git"
+  },
+  "homepage": "https://github.com/jklzues/daily-learning#readme",
+  "bugs": {
+    "url": "https://github.com/jklzues/daily-learning/issues"
+  },
+  "keywords": [
+    "electron",
+    "windows",
+    "notion",
+    "markdown",
+    "ai",
+    "notes",
+    "llm"
+  ],
+  "author": "jklzues",
   "license": "MIT",
   "devDependencies": {
     "electron": "^35.7.5",
@@ -25,6 +42,7 @@
     },
     "files": [
       "main.js",
+      "preload.js",
       "index.html",
       "styles/**/*",
       "scripts/**/*",
@@ -33,6 +51,7 @@
       "package.json"
     ],
     "win": {
+      "icon": "assets/logo.png",
       "target": [
         {
           "target": "portable",

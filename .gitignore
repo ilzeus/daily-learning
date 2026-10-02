@@ -5,3 +5,9 @@ release/
 *.exe
 *.dmg
 *.AppImage
+
+# 临时探针与它的产物（截图 / JSON 结果 / 日志）
+.probe-*
+
+# 徽标原始素材：只用来重新导出 assets/logo.png，不进仓库
+logo-raw.png
