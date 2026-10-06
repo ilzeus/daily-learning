@@ -34,7 +34,7 @@ Daily Learning 把这件事压成一个桌面动作：**一次提问，同时拿
 
 **下载安装包（最省事）**
 
-到 [Releases](https://github.com/jklzues/daily-learning/releases/latest) 拿 v1.1.0，两个文件选一个：
+到 [Releases](https://github.com/ilzeus/daily-learning/releases/latest) 拿 v1.1.0，两个文件选一个：
 
 | 文件 | 是什么 |
 | --- | --- |
@@ -46,7 +46,7 @@ Daily Learning 把这件事压成一个桌面动作：**一次提问，同时拿
 **从源码运行**
 
 ```bash
-git clone https://github.com/jklzues/daily-learning.git
+git clone https://github.com/ilzeus/daily-learning.git
 cd daily-learning
 npm install     # 运行时依赖只有 marked（Electron 和 electron-builder 是开发依赖）
 npm start       # 启动桌面窗口
@@ -194,4 +194,4 @@ MIT — 见 [LICENSE](LICENSE)。
 
 ## 作者
 
-- **jklzues** · GitHub: [@jklzues](https://github.com/jklzues)
+- **ilzeus** · GitHub: [@ilzeus](https://github.com/ilzeus)

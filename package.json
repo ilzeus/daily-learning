@@ -10,11 +10,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jklzues/daily-learning.git"
+    "url": "git+https://github.com/ilzeus/daily-learning.git"
   },
-  "homepage": "https://github.com/jklzues/daily-learning#readme",
+  "homepage": "https://github.com/ilzeus/daily-learning#readme",
   "bugs": {
-    "url": "https://github.com/jklzues/daily-learning/issues"
+    "url": "https://github.com/ilzeus/daily-learning/issues"
   },
   "keywords": [
     "electron",
@@ -25,7 +25,7 @@
     "notes",
     "llm"
   ],
-  "author": "jklzues",
+  "author": "ilzeus",
   "license": "MIT",
   "devDependencies": {
     "electron": "^35.7.5",
